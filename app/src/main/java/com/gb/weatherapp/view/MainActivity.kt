@@ -20,12 +20,16 @@ import javax.net.ssl.HttpsURLConnection
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
+//    private lateinit var binding: MainActivityWebviewBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
+//        binding = MainActivityWebviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //binding.ok.setOnClickListener(clickListener)
-        if (savedInstanceState == null) {
+//        binding.ok.setOnClickListener(clickListener)
+        savedInstanceState?.let {
+            // TODO
+        } ?: run {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitAllowingStateLoss()

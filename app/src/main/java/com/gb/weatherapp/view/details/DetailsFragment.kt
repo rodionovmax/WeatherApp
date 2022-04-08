@@ -50,6 +50,7 @@ class DetailsFragment : Fragment() {
             weatherBundle.city.lon)
         loader.loadWeather()
     }
+
     private fun displayWeather(weatherDTO: WeatherDTO) {
         with(binding) {
             mainView.visibility = View.VISIBLE
