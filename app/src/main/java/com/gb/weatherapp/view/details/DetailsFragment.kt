@@ -37,6 +37,7 @@ private const val FEELS_LIKE_INVALID = -100
 private const val PROCESS_ERROR = "Обработка ошибки"
 private const val MAIN_LINK = "https://api.weather.yandex.ru/v2/informers?"
 private const val REQUEST_API_KEY = "X-Yandex-API-Key"
+
 class DetailsFragment : Fragment(R.layout.fragment_main) {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
@@ -59,10 +60,8 @@ class DetailsFragment : Fragment(R.layout.fragment_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         weatherBundle = arguments?.getParcelable(BUNDLE_EXTRA) ?: Weather()
-        viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it)
-        })
-        viewModel.getWeatherFromRemoteSource(MAIN_LINK +
-                "lat=${weatherBundle.city.lat}&lon=${weatherBundle.city.lon}")
+        viewModel.detailsLiveData.observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.getWeatherFromRemoteSource(weatherBundle.city.lat, weatherBundle.city.lon)
     }
 
     private fun renderData(appState: AppState) {
@@ -82,8 +81,12 @@ class DetailsFragment : Fragment(R.layout.fragment_main) {
                 binding.mainView.showSnackBar(
                     getString(R.string.error),
                     getString(R.string.reload),
-                    { viewModel.getWeatherFromRemoteSource(MAIN_LINK +
-                            "lat=${weatherBundle.city.lat}&lon=${weatherBundle.city.lon}") })
+                    {
+                        viewModel.getWeatherFromRemoteSource(
+                            weatherBundle.city.lat,
+                            weatherBundle.city.lon
+                        )
+                    })
             }
         }
     }
