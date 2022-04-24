@@ -1,6 +1,8 @@
-package com.gb.weatherapp.model
+package com.gb.weatherapp.repository
 
-interface Repository {
+import com.gb.weatherapp.model.Weather
+
+interface MainRepository {
     fun getWeatherFromServer(): Weather
     fun getWeatherFromLocalStorageRus(): List<Weather>
     fun getWeatherFromLocalStorageWorld(): List<Weather>
