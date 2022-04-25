@@ -1,5 +1,6 @@
 package com.gb.weatherapp.view.details
 
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -16,7 +17,10 @@ import com.gb.weatherapp.model.WeatherDTO
 import com.gb.weatherapp.utils.showSnackBar
 import com.gb.weatherapp.viewmodel.AppState
 import com.gb.weatherapp.viewmodel.DetailsViewModel
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import com.google.gson.Gson
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_details.*
 import okhttp3.*
 import java.io.IOException
 
@@ -102,6 +106,18 @@ class DetailsFragment : Fragment(R.layout.fragment_main) {
         binding.temperatureValue.text = weather.temperature.toString()
         binding.feelsLikeValue.text = weather.feelsLike.toString()
         binding.weatherCondition.text = weather.condition
+        Picasso
+            .get()
+            .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
+            .into(headerIcon)
+
+        weather.icon?.let {
+            GlideToVectorYou.justLoadImage(
+                activity,
+                Uri.parse("https://yastatic.net/weather/i/icons/blueye/color/svg/${it}.svg"),
+                weatherIcon
+            )
+        }
     }
 
     override fun onDestroyView() {
