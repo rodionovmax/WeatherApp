@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.gb.weatherapp.BuildConfig
 import com.gb.weatherapp.R
 import com.gb.weatherapp.databinding.FragmentDetailsBinding
+import com.gb.weatherapp.model.City
 import com.gb.weatherapp.model.Weather
 import com.gb.weatherapp.model.WeatherDTO
 import com.gb.weatherapp.utils.showSnackBar
@@ -96,33 +97,45 @@ class DetailsFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun setWeather(weather: Weather) {
-        val city = weatherBundle.city
-        binding.cityName.text = city.city
-        binding.cityCoordinates.text = String.format(
-            getString(R.string.city_coordinates),
-            city.lat.toString(),
-            city.lon.toString()
-        )
-        binding.temperatureValue.text = weather.temperature.toString()
-        binding.feelsLikeValue.text = weather.feelsLike.toString()
-        binding.weatherCondition.text = weather.condition
-        Picasso
-            .get()
-            .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
-            .into(headerIcon)
+        with(binding) {
+            val city = weatherBundle.city
 
-        weather.icon?.let {
-            GlideToVectorYou.justLoadImage(
-                activity,
-                Uri.parse("https://yastatic.net/weather/i/icons/blueye/color/svg/${it}.svg"),
-                weatherIcon
+            saveCity(city, weather)
+
+            cityName.text = city.city
+            cityCoordinates.text = String.format(
+                getString(R.string.city_coordinates),
+                city.lat.toString(),
+                city.lon.toString()
             )
+            temperatureValue.text = weather.temperature.toString()
+            feelsLikeValue.text = weather.feelsLike.toString()
+            weatherCondition.text = weather.condition
+
+            Picasso
+                .get()
+                .load("https://freepngimg.com/thumb/city/36275-3-city-hd.png")
+                .into(headerIcon)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun saveCity(
+        city: City,
+        weather: Weather
+    ) {
+        viewModel.saveCityToDB(
+            Weather(
+                city,
+                weather.temperature,
+                weather.feelsLike,
+                weather.condition
+            )
+        )
     }
 
     companion object {

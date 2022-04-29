@@ -10,19 +10,17 @@ import com.gb.weatherapp.R
 import com.gb.weatherapp.view.experiments.ThreadsFragment
 import com.gb.weatherapp.databinding.MainActivityBinding
 import com.gb.weatherapp.view.experiments.MainBroadcastReceiver
+import com.gb.weatherapp.view.history.HistoryFragment
 import com.gb.weatherapp.view.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainActivityBinding
     private val receiver = MainBroadcastReceiver()
 
-//    private lateinit var binding: MainActivityWebviewBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
-//        binding = MainActivityWebviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        binding.ok.setOnClickListener(clickListener)
         savedInstanceState?.let {
             // TODO
         } ?: run {
@@ -50,6 +48,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
+            R.id.menu_history -> {
+                supportFragmentManager.apply {
+                    beginTransaction()
+                        .add(R.id.container, HistoryFragment.newInstance())
+                        .addToBackStack("")
+                        .commitAllowingStateLoss()
+                }
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -59,40 +66,4 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    /*private var clickListener: View.OnClickListener = object : View.OnClickListener {
-        @RequiresApi(Build.VERSION_CODES.N)
-        override fun onClick(v: View?) {
-            try {
-                val uri = URL(binding.url.text.toString())
-                val handler = Handler() //Запоминаем основной поток
-                Thread {
-                    var urlConnection: HttpsURLConnection? = null
-                    try {
-                        urlConnection = uri.openConnection() as HttpsURLConnection
-                        urlConnection.requestMethod = "GET" //установка метода получения данных — GET
-                        urlConnection.readTimeout = 10000 //установка таймаута — 10 000 миллисекунд
-                        val reader =
-                            BufferedReader(InputStreamReader(urlConnection.inputStream)) //читаем данные в поток
-                        val result = getLines(reader) // Возвращаемся к основному потоку
-                        handler.post {
-//                            binding.webview.loadData(result, "text/html; charset=utf-8", "utf-8")
-                            binding.webview.loadDataWithBaseURL(null, result, "text/html; charset=utf-8", "utf-8", null)
-                        }
-                    } catch (e: Exception) {
-                        Log.e("", "Fail connection", e)
-                        e.printStackTrace()
-                    } finally {
-                        urlConnection?.disconnect()
-                    }
-                }.start()
-            } catch (e: MalformedURLException) {
-                Log.e("", "Fail URI", e)
-                e.printStackTrace()
-            }
-        }
-        @RequiresApi(Build.VERSION_CODES.N)
-        private fun getLines(reader: BufferedReader): String {
-            return reader.lines().collect(Collectors.joining("\n"))
-        }
-    }*/
 }
